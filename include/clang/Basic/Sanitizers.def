@@ -40,6 +40,8 @@
 // AddressSanitizer
 SANITIZER("address", Address)
 
+SANITIZER("fast", FastAddress)
+
 // Requires AddressSanitizer
 SANITIZER("pointer-compare", PointerCompare)
 
