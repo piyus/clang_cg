@@ -750,7 +750,7 @@ void CodeGenFunction::StartFunction(GlobalDecl GD, QualType RetTy,
   }
 
   // Apply sanitizer attributes to the function.
-  if (SanOpts.hasOneOf(SanitizerKind::Address | SanitizerKind::KernelAddress))
+  if (SanOpts.hasOneOf(SanitizerKind::Address | SanitizerKind::KernelAddress | SanitizerKind::FastAddress))
     Fn->addFnAttr(llvm::Attribute::SanitizeAddress);
   if (SanOpts.hasOneOf(SanitizerKind::HWAddress | SanitizerKind::KernelHWAddress))
     Fn->addFnAttr(llvm::Attribute::SanitizeHWAddress);

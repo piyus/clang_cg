@@ -271,10 +271,10 @@ static void addAddressSanitizerPasses(const PassManagerBuilder &Builder,
 
 static void addFastAddressSanitizerPasses(const PassManagerBuilder &Builder,
                                       legacy::PassManagerBase &PM) {
-  PM.add(createFastAddressSanitizerFunctionPass(/*CompileKernel*/ false, false,
-                                                false));
+  PM.add(createFastAddressSanitizerFunctionPass(/*CompileKernel*/ false, true,
+                                                true));
   PM.add(createModuleFastAddressSanitizerLegacyPassPass(
-      /*CompileKernel*/ false, false, false, false));
+      /*CompileKernel*/ false, true, true, true));
 }
 
 static void addKernelAddressSanitizerPasses(const PassManagerBuilder &Builder,
