@@ -277,6 +277,7 @@ AddCXXStdlibLibArgs(const llvm::opt::ArgList &DriverArgs,
 clang::SanitizerMask CrossWindowsToolChain::getSupportedSanitizers() const {
   SanitizerMask Res = ToolChain::getSupportedSanitizers();
   Res |= SanitizerKind::Address;
+  Res |= SanitizerKind::FastAddress;
   Res |= SanitizerKind::PointerCompare;
   Res |= SanitizerKind::PointerSubtract;
   return Res;

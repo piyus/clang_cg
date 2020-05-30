@@ -28,7 +28,7 @@ void getDarwinDefines(MacroBuilder &Builder, const LangOptions &Opts,
   Builder.defineMacro("OBJC_NEW_PROPERTIES");
   // AddressSanitizer doesn't play well with source fortification, which is on
   // by default on Darwin.
-  if (Opts.Sanitize.has(SanitizerKind::Address))
+  if (Opts.Sanitize.has(SanitizerKind::Address) || Opts.Sanitize.has(SanitizerKind::FastAddress))
     Builder.defineMacro("_FORTIFY_SOURCE", "0");
 
   // Darwin defines __weak, __strong, and __unsafe_unretained even in C mode.

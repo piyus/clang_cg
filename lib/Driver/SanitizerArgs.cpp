@@ -47,7 +47,8 @@ static const SanitizerMask SupportsCoverage =
     SanitizerKind::ImplicitConversion | SanitizerKind::Nullability |
     SanitizerKind::DataFlow | SanitizerKind::Fuzzer |
     SanitizerKind::FuzzerNoLink | SanitizerKind::FloatDivideByZero |
-    SanitizerKind::SafeStack | SanitizerKind::ShadowCallStack;
+    SanitizerKind::SafeStack | SanitizerKind::ShadowCallStack |
+		SanitizerKind::FastAddress;
 static const SanitizerMask RecoverableByDefault =
     SanitizerKind::Undefined | SanitizerKind::Integer |
     SanitizerKind::ImplicitConversion | SanitizerKind::Nullability |
@@ -124,6 +125,7 @@ static void addDefaultBlacklists(const Driver &D, SanitizerMask Kinds,
     const char *File;
     SanitizerMask Mask;
   } Blacklists[] = {{"asan_blacklist.txt", SanitizerKind::Address},
+                    {"fastasan_blacklist.txt", SanitizerKind::FastAddress},
                     {"hwasan_blacklist.txt", SanitizerKind::HWAddress},
                     {"memtag_blacklist.txt", SanitizerKind::MemTag},
                     {"msan_blacklist.txt", SanitizerKind::Memory},
@@ -415,6 +417,11 @@ SanitizerArgs::SanitizerArgs(const ToolChain &TC,
                      SanitizerKind::Address | SanitizerKind::HWAddress |
                          SanitizerKind::Leak | SanitizerKind::Thread |
                          SanitizerKind::Memory | SanitizerKind::KernelAddress),
+      std::make_pair(SanitizerKind::FastAddress,
+                     SanitizerKind::Address | SanitizerKind::HWAddress |
+                         SanitizerKind::Leak | SanitizerKind::Thread |
+                         SanitizerKind::Memory | SanitizerKind::KernelAddress |
+												 SanitizerKind::SafeStack),
       std::make_pair(SanitizerKind::KernelHWAddress,
                      SanitizerKind::Address | SanitizerKind::HWAddress |
                          SanitizerKind::Leak | SanitizerKind::Thread |
