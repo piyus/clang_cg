@@ -60,7 +60,7 @@ class SanitizerArgs {
 
   bool needsSharedRt() const { return SharedRuntime; }
 
-  bool needsAsanRt() const { return Sanitizers.has(SanitizerKind::Address) || Sanitizers.has(SanitizerKind::FastAddress); }
+  bool needsAsanRt() const { return Sanitizers.has(SanitizerKind::Address); }
   bool needsHwasanRt() const {
     return Sanitizers.has(SanitizerKind::HWAddress);
   }
@@ -70,7 +70,6 @@ class SanitizerArgs {
   bool needsLsanRt() const {
     return Sanitizers.has(SanitizerKind::Leak) &&
            !Sanitizers.has(SanitizerKind::Address) &&
-           !Sanitizers.has(SanitizerKind::FastAddress) &&
            !Sanitizers.has(SanitizerKind::HWAddress);
   }
   bool needsUbsanRt() const;

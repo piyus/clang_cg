@@ -275,6 +275,14 @@ static void addFastAddressSanitizerPasses(const PassManagerBuilder &Builder,
                                                 true));
   PM.add(createModuleFastAddressSanitizerLegacyPassPass(
       /*CompileKernel*/ false, true, true, true));
+  if (Builder.OptLevel > 0) {
+    PM.add(createEarlyCSEPass());
+    PM.add(createReassociatePass());
+    PM.add(createLICMPass());
+    PM.add(createGVNPass());
+    PM.add(createInstructionCombiningPass());
+    PM.add(createDeadStoreEliminationPass());
+  }
 }
 
 static void addKernelAddressSanitizerPasses(const PassManagerBuilder &Builder,

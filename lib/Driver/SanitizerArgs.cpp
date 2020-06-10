@@ -1056,8 +1056,7 @@ void SanitizerArgs::addArgs(const ToolChain &TC, const llvm::opt::ArgList &Args,
   // We can't make this conditional on -fsanitize=leak, as that flag shouldn't
   // affect compilation.
   if (Sanitizers.has(SanitizerKind::Memory) ||
-      Sanitizers.has(SanitizerKind::Address) ||
-			Sanitizers.has(SanitizerKind::FastAddress))
+      Sanitizers.has(SanitizerKind::Address))
     CmdArgs.push_back("-fno-assume-sane-operator-new");
 
   // Require -fvisibility= flag on non-Windows when compiling if vptr CFI is
