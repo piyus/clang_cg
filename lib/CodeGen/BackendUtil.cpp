@@ -271,6 +271,7 @@ static void addAddressSanitizerPasses(const PassManagerBuilder &Builder,
 
 static void addFastAddressSanitizerPasses(const PassManagerBuilder &Builder,
                                       legacy::PassManagerBase &PM) {
+  PM.add(createRefEqPass());
   PM.add(createFastAddressSanitizerFunctionPass(/*CompileKernel*/ false, true,
                                                 true));
   PM.add(createModuleFastAddressSanitizerLegacyPassPass(
