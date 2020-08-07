@@ -3708,13 +3708,13 @@ static Address EmitX86_64VAArgFromMemory(CodeGenFunction &CGF,
   overflow_arg_area = CGF.Builder.CreateGEP(overflow_arg_area, Offset,
                                             "overflow_arg_area.next");
 
-  CGF.Builder.CreateStore(overflow_arg_area, overflow_arg_area_p);
-#if 0
+  //CGF.Builder.CreateStore(overflow_arg_area, overflow_arg_area_p);
+//#if 0
   llvm::SmallVector<llvm::Value *, 2> Args;
 	Args.push_back(overflow_arg_area_p.getPointer());
 	Args.push_back(overflow_arg_area);
   CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(llvm::Intrinsic::safe_store), Args);
-#endif
+//#endif
 
   // AMD64-ABI 3.5.7p5: Step 11. Return the fetched type.
   return Address(Res, Align);
