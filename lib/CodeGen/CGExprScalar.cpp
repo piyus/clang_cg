@@ -4411,6 +4411,15 @@ Value *ScalarExprEmitter::VisitVAArgExpr(VAArgExpr *VE) {
 
   // FIXME Volatility.
   llvm::Value *Val = Builder.CreateLoad(ArgPtr);
+#if 0
+  SmallVector<llvm::Value*, 1> Args;
+	auto Ptr = ArgPtr.getPointer();
+  Args.push_back(Ptr);
+	llvm::Type *ArgsTy[] = {Ptr->getType()->getPointerElementType(), Ptr->getType()};
+	//llvm::errs() << "ARGS: " << *Args[0] << "\n";
+  llvm::Value *Val = Builder.CreateCall(CGF.CGM.getIntrinsic(llvm::Intrinsic::safe_load, ArgsTy), Args);
+#endif
+
 
   // If EmitVAArg promoted the type, we must truncate it.
   if (ArgTy != Val->getType()) {

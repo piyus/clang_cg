@@ -3707,7 +3707,14 @@ static Address EmitX86_64VAArgFromMemory(CodeGenFunction &CGF,
       llvm::ConstantInt::get(CGF.Int32Ty, (SizeInBytes + 7)  & ~7);
   overflow_arg_area = CGF.Builder.CreateGEP(overflow_arg_area, Offset,
                                             "overflow_arg_area.next");
+
   CGF.Builder.CreateStore(overflow_arg_area, overflow_arg_area_p);
+#if 0
+  llvm::SmallVector<llvm::Value *, 2> Args;
+	Args.push_back(overflow_arg_area_p.getPointer());
+	Args.push_back(overflow_arg_area);
+  CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(llvm::Intrinsic::safe_store), Args);
+#endif
 
   // AMD64-ABI 3.5.7p5: Step 11. Return the fetched type.
   return Address(Res, Align);
@@ -3721,7 +3728,35 @@ Address X86_64ABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
   //   i32 fp_offset;
   //   i8* overflow_arg_area;
   //   i8* reg_save_area;
+	//   i32 num_args;
   // };
+
+  Address num_args_p = Address::invalid();
+  llvm::Value *num_args;
+  llvm::Value *zero, *one;
+  llvm::Value *need_abort;
+
+  num_args_p = CGF.Builder.CreateStructGEP(VAListAddr, 4);
+  num_args = CGF.Builder.CreateLoad(num_args_p);
+  zero = llvm::ConstantInt::get(CGF.Int32Ty, 0);
+  one = llvm::ConstantInt::get(CGF.Int32Ty, 1);
+
+  need_abort = CGF.Builder.CreateICmpULE(num_args, zero);
+
+  llvm::BasicBlock *abort_block = CGF.createBasicBlock("vaarg.abort");
+  llvm::BasicBlock *cont_block = CGF.createBasicBlock("vaarg.start");
+  CGF.Builder.CreateCondBr(need_abort, abort_block, cont_block);
+
+  CGF.EmitBlock(abort_block);
+  llvm::SmallVector<llvm::Value *, 2> Args;
+  CGF.Builder.CreateCall(CGF.CGM.getIntrinsic(llvm::Intrinsic::trap), Args);
+  CGF.EmitBranch(cont_block);
+
+
+  CGF.EmitBlock(cont_block);
+  num_args = CGF.Builder.CreateSub(num_args, one);
+	CGF.Builder.CreateStore(num_args, num_args_p);
+
   unsigned neededInt, neededSSE;
 
   Ty = getContext().getCanonicalType(Ty);
