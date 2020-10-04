@@ -276,6 +276,7 @@ static void addFastAddressSanitizerPasses(const PassManagerBuilder &Builder,
                                                 true));
   PM.add(createModuleFastAddressSanitizerLegacyPassPass(
       /*CompileKernel*/ false, true, true, true));
+  PM.add(createFastTracePass());
   if (Builder.OptLevel > 0) {
     PM.add(createEarlyCSEPass());
     PM.add(createReassociatePass());
