@@ -279,7 +279,10 @@ static void addFastAddressSanitizerPasses(const PassManagerBuilder &Builder,
   PM.add(createFastTracePass());
   if (Builder.OptLevel > 0) {
     PM.add(createEarlyCSEPass());
+		PM.add(createPromoteMemoryToRegisterPass());
+		PM.add(createCFGSimplificationPass());
     PM.add(createReassociatePass());
+		PM.add(createLoopSimplifyPass());
     PM.add(createLICMPass());
     PM.add(createGVNPass());
     PM.add(createInstructionCombiningPass());
